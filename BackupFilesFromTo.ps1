@@ -16,17 +16,17 @@ Get-ChildItem -Recurse $source | Where-Object {
         $hashDest = Get-FileHash $destFile
         # if exist, delete file
          if ($hashSource.Hash -eq $hashDest.Hash) {
-            Write-Host "Ya existe (idéntico): $destFile"
+            Write-Host "Ya existe (idéntico): $destFile $($_.LastWriteTime)"
             Remove-Item $_.FullName -Force
         } else {
         #if exist but its different content, dont do nothing
-            Write-Host "Conflicto (mismo nombre, diferente contenido): $destFile"
+            Write-Host "Conflicto (mismo nombre, diferente contenido): $destFile $($_.LastWriteTime)"
         }
     } else {
         #doesnt exist → move to destination
         $targetDir = Split-Path $destFile
         New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
         Move-Item $_.FullName -Destination $destFile
-        Write-Host "Movido a backup: $destFile"
+        Write-Host "Movido a backup: $destFile $($_.LastWriteTime)"
     }
 }
